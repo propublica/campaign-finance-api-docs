@@ -37,7 +37,7 @@
       <div id="toc">
       </div>
         <ul class="toc-footer">
-            <li><a href='#'>Sign Up for a Developer Key</a></li>
+            <li><a href='mailto:apihelp@propublica.org'>Request an API Key</a></li>
             <li><a href='http://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
         </ul>
     </div>
@@ -73,33 +73,28 @@
 <blockquote>
 <p>To authorize, use this code:</p>
 </blockquote>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'campaign_cash'</span>
-
-<span class="no">CampaignCash</span><span class="o">::</span><span class="no">Base</span><span class="p">.</span><span class="nf">api_key</span> <span class="o">=</span> <span class="no">YOUR_API_KEY</span>
-
-</code></pre>
 <pre class="highlight shell"><code><span class="c"># With shell, you can just pass the correct header with each request</span>
 curl <span class="s2">"api_endpoint_here"</span>
-  -H <span class="s2">"Authorization: YOUR_API_KEY"</span>
+  -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
 <p>Make sure to replace <code class="prettyprint">YOUR_API_KEY</code> with your API key.</p>
 </blockquote>
 
-<p>To use the Campaign Finance API, you must sign up for an API key. Usage is limited to 5000 requests per day (rate limits are subject to change). The API key must be included in all API requests to the server, as a query string parameter:</p>
+<p>To use the Campaign Finance API, you must sign up for an API key. Usage is limited to 5000 requests per day (rate limits are subject to change). The API key must be included in all API requests to the server, set as a header:</p>
 
-<p><code class="prettyprint">Authorization: YOUR_API_KEY</code></p>
+<p><code class="prettyprint">X-API-Key: PROPUBLICA_API_KEY</code></p>
 
 <aside class="notice">
-You must replace <code>YOUR_API_KEY</code> with your personal API key.
+You must replace <code>PROPUBLICA_API_KEY</code> with your personal API key.
 </aside>
 
 <h1 id="requests">Requests</h1>
 
 <p>The Campaign Finance API uses a RESTful style. See individual methods below for permitted requests. The API only accepts GET requests. All requests begin with:</p>
 
-<p><code class="prettyprint">https://api.propublica.org/svc/elections/us/{version}/finances</code></p>
+<p><code class="prettyprint">https://api.propublica.org/campaign-finance/{version}/</code></p>
 
 <p>The current version is <code class="prettyprint">v1</code>.</p>
 
@@ -110,20 +105,21 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 <ul>
 <li><em>version</em> The API version (in URI path). The current version is <code class="prettyprint">v1</code>.</li>
 <li><em>campaign-cycle</em> An even-numbered year between 1996 and 2016 (in URI path). The current cycle in <code class="prettyprint">2016</code>.</li>
-<li><em>api-key</em> Your ProPublica API key (in query string).</li>
+<li><em>format</em> The format of the response (<code class="prettyprint">.json</code> or <code class="prettyprint">.xml</code>) added to the end of the request.</li>
 </ul>
 
 <p>The following parameters are optional:  </p>
 
 <ul>
 <li><em>callback</em> JSONP callback function (in query string).</li>
+<li><em>offset</em> The first 20 results are shown by default. To page through the results, set offset to the appropriate multiple of 20.</li>
 </ul>
 
 <h1 id="candidates">Candidates</h1>
 
 <h2 id="search-for-candidates">Search for Candidates</h2>
-<pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1/"</span>
-  -H <span class="s2">"Authorization: YOUR_API_KEY"</span>
+<pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1/2016/candidates/search.json?query=Wilson"</span>
+  -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -133,7 +129,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
    </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"OK"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"copyright"</span><span class="p">:</span><span class="s2">"Copyright (c) 2016 Pro Publica Inc. All Rights Reserved."</span><span class="p">,</span><span class="w">
    </span><span class="nt">"cycle"</span><span class="p">:</span><span class="mi">2016</span><span class="p">,</span><span class="w">
-   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/svc/elections/us/v3/finances/2016/"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/campaign-finance/v1/2016/"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"num_results"</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="w">
    </span><span class="nt">"offset"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span><span class="w">
    </span><span class="nt">"results"</span><span class="p">:[</span><span class="w">
@@ -163,7 +159,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<p>This endpoint has two</p>
+<p>This endpoint retrieves federal candidates by last name, using a query string parameter.</p>
 
 <h3 id="http-request">HTTP Request</h3>
 
@@ -184,8 +180,8 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 </tbody></table>
 
 <h2 id="get-a-specific-candidate">Get a Specific Candidate</h2>
-<pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1//2"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
+<pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1/2016/candidates/P60005915.json"</span>
+  -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -258,8 +254,8 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 </tbody></table>
 
 <h2 id="get-top-20-candidates-in-specific-financial-category">Get Top 20 Candidates in Specific Financial Category</h2>
-<pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1//2"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
+<pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1/2016/candidates/leaders/pac-total.json"</span>
+  -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -270,7 +266,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
    </span><span class="nt">"copyright"</span><span class="p">:</span><span class="s2">"Copyright (c) 2016 ProPublica Inc. All Rights Reserved."</span><span class="p">,</span><span class="w">
    </span><span class="nt">"cycle"</span><span class="p">:</span><span class="mi">2016</span><span class="p">,</span><span class="w">
    </span><span class="nt">"category"</span><span class="p">:</span><span class="s2">"Contributions from PACs"</span><span class="p">,</span><span class="w">
-   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/svc/elections/us/v3/finances/2016/"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/campaign-finance/v1/2016/"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"results"</span><span class="p">:[</span><span class="w">
       </span><span class="p">{</span><span class="w">
          </span><span class="nt">"relative_uri"</span><span class="p">:</span><span class="s2">"/candidates/S4NC00089.json"</span><span class="p">,</span><span class="w">
@@ -741,8 +737,8 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 </tbody></table>
 
 <h2 id="get-candidates-from-a-state">Get Candidates from a State</h2>
-<pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1//2"</span>
- -H <span class="s2">"Authorization: meowmeowmeow"</span>
+<pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1/2016/seats/DE.json"</span>
+ -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -752,7 +748,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
    </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"OK"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"copyright"</span><span class="p">:</span><span class="s2">"Copyright (c) 2016 ProPublica Inc. All Rights Reserved."</span><span class="p">,</span><span class="w">
    </span><span class="nt">"cycle"</span><span class="p">:</span><span class="mi">2016</span><span class="p">,</span><span class="w">
-   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/svc/elections/us/v3/finances/2016/"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/campaign-finance/v1/2016/"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"num_results"</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="w">
    </span><span class="nt">"results"</span><span class="p">:[</span><span class="w">
       </span><span class="p">{</span><span class="w">
@@ -811,7 +807,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <h2 id="get-recently-added-candidates">Get Recently Added Candidates</h2>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1//2"</span>
- -H <span class="s2">"Authorization: meowmeowmeow"</span>
+ -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -821,7 +817,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
    </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"OK"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"copyright"</span><span class="p">:</span><span class="s2">"Copyright (c) 2016 ProPublica Inc. All Rights Reserved."</span><span class="p">,</span><span class="w">
    </span><span class="nt">"cycle"</span><span class="p">:</span><span class="mi">2016</span><span class="p">,</span><span class="w">
-   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/svc/elections/us/v3/finances/2016/"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/campaign-finance/v1/2016/"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"results"</span><span class="p">:[</span><span class="w">
       </span><span class="p">{</span><span class="w">
          </span><span class="nt">"id"</span><span class="p">:</span><span class="s2">"P60005162"</span><span class="p">,</span><span class="w">
@@ -1102,7 +1098,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 <span class="no">CampaignCash</span><span class="o">::</span><span class="no">Committee</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="s2">"Carson"</span><span class="p">,</span> <span class="mi">2016</span><span class="p">)</span>
 </code></pre>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1/"</span>
-  -H <span class="s2">"Authorization: YOUR_API_KEY"</span>
+  -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -1252,7 +1248,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <h2 id="get-a-specific-committee">Get a Specific Committee</h2>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1//2"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
+  -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -1262,7 +1258,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
    </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"OK"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"copyright"</span><span class="p">:</span><span class="s2">"Copyright (c) 2016 ProPublica Inc. All Rights Reserved."</span><span class="p">,</span><span class="w">
    </span><span class="nt">"cycle"</span><span class="p">:</span><span class="mi">2016</span><span class="p">,</span><span class="w">
-   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/svc/elections/us/v3/finances/2016/"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/campaign-finance/v1/2016/"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"results"</span><span class="p">:[</span><span class="w">
       </span><span class="p">{</span><span class="w">
          </span><span class="nt">"id"</span><span class="p">:</span><span class="s2">"C00553560"</span><span class="p">,</span><span class="w">
@@ -1327,7 +1323,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <h2 id="get-recently-added-committees">Get Recently Added Committees</h2>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1//2"</span>
- -H <span class="s2">"Authorization: meowmeowmeow"</span>
+ -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -1337,7 +1333,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
    </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"OK"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"copyright"</span><span class="p">:</span><span class="s2">"Copyright (c) 2016 ProPublica Inc. All Rights Reserved."</span><span class="p">,</span><span class="w">
    </span><span class="nt">"cycle"</span><span class="p">:</span><span class="mi">2016</span><span class="p">,</span><span class="w">
-   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/svc/elections/us/v3/finances/2016/"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/campaign-finance/v1/2016/"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"results"</span><span class="p">:[</span><span class="w">
       </span><span class="p">{</span><span class="w">
          </span><span class="nt">"id"</span><span class="p">:</span><span class="s2">"C00577569"</span><span class="p">,</span><span class="w">
@@ -1771,7 +1767,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <h2 id="get-recently-added-independent-expenditure-only-committees">Get Recently Added Independent Expenditure-Only Committees</h2>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1//2"</span>
- -H <span class="s2">"Authorization: meowmeowmeow"</span>
+ -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -1781,7 +1777,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
    </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"OK"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"copyright"</span><span class="p">:</span><span class="s2">"Copyright (c) 2016 ProPublica Inc. All Rights Reserved."</span><span class="p">,</span><span class="w">
    </span><span class="nt">"cycle"</span><span class="p">:</span><span class="mi">2016</span><span class="p">,</span><span class="w">
-   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/svc/elections/us/v3/finances/2016/"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/campaign-finance/v1/2016/"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"offset"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span><span class="w">
    </span><span class="nt">"results"</span><span class="p">:[</span><span class="w">
       </span><span class="p">{</span><span class="w">
@@ -2176,7 +2172,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <h2 id="get-committee-filings">Get Committee Filings</h2>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1//2"</span>
- -H <span class="s2">"Authorization: meowmeowmeow"</span>
+ -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -2184,7 +2180,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
    </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"OK"</span><span class="p">,</span><span class="w">
-   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/svc/elections/us/v3/finances/2016/"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/campaign-finance/v1/2016/"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"copyright"</span><span class="p">:</span><span class="s2">"Copyright (c) 2016 ProPublica Inc. All Rights Reserved."</span><span class="p">,</span><span class="w">
    </span><span class="nt">"committee"</span><span class="p">:</span><span class="s2">"/committees/C00553560.json"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"fec_committee_id"</span><span class="p">:</span><span class="s2">"C00553560"</span><span class="p">,</span><span class="w">
@@ -2524,7 +2520,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <h2 id="get-leadership-committees">Get Leadership Committees</h2>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1//2"</span>
- -H <span class="s2">"Authorization: meowmeowmeow"</span>
+ -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -2534,7 +2530,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
    </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"OK"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"copyright"</span><span class="p">:</span><span class="s2">"Copyright (c) 2016 ProPublica Inc. All Rights Reserved."</span><span class="p">,</span><span class="w">
    </span><span class="nt">"cycle"</span><span class="p">:</span><span class="mi">2016</span><span class="p">,</span><span class="w">
-   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/svc/elections/us/v3/finances/2016/"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/campaign-finance/v1/2016/"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"offset"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span><span class="w">
    </span><span class="nt">"results"</span><span class="p">:[</span><span class="w">
       </span><span class="p">{</span><span class="w">
@@ -3627,7 +3623,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
    </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"OK"</span><span class="p">,</span><span class="w">
-   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/svc/elections/us/v3/finances/2016/"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/campaign-finance/v1/2016/"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"cycle"</span><span class="p">:</span><span class="mi">2016</span><span class="p">,</span><span class="w">
    </span><span class="nt">"copyright"</span><span class="p">:</span><span class="s2">"Copyright (c) 2016 ProPublica Inc. All Rights Reserved."</span><span class="p">,</span><span class="w">
    </span><span class="nt">"results"</span><span class="p">:[</span><span class="w">
@@ -3808,7 +3804,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <h2 id="search-for-electronic-filings">Search for Electronic Filings</h2>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1/"</span>
-  -H <span class="s2">"Authorization: YOUR_API_KEY"</span>
+  -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -3818,7 +3814,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
    </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"OK"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"copyright"</span><span class="p">:</span><span class="s2">"Copyright (c) 2016 ProPublica Inc. All Rights Reserved."</span><span class="p">,</span><span class="w">
    </span><span class="nt">"date"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span><span class="w">
-   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/svc/elections/us/v3/finances/2016/"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/campaign-finance/v1/2016/"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"cycle"</span><span class="p">:</span><span class="mi">2016</span><span class="p">,</span><span class="w">
    </span><span class="nt">"offset"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span><span class="w">
    </span><span class="nt">"results"</span><span class="p">:[</span><span class="w">
@@ -3998,7 +3994,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <h2 id="get-electronic-filings-by-date">Get Electronic Filings by Date</h2>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1/"</span>
-  -H <span class="s2">"Authorization: YOUR_API_KEY"</span>
+  -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -4008,7 +4004,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
    </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"OK"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"copyright"</span><span class="p">:</span><span class="s2">"Copyright (c) 2016 ProPublica Inc. All Rights Reserved."</span><span class="p">,</span><span class="w">
    </span><span class="nt">"date"</span><span class="p">:</span><span class="s2">"2016-01-10"</span><span class="p">,</span><span class="w">
-   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/svc/elections/us/v3/finances/2016/"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/campaign-finance/v1/2016/"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"cycle"</span><span class="p">:</span><span class="mi">2016</span><span class="p">,</span><span class="w">
    </span><span class="nt">"offset"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span><span class="w">
    </span><span class="nt">"results"</span><span class="p">:[</span><span class="w">
@@ -5146,7 +5142,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <h2 id="get-electronic-filing-form-types">Get Electronic Filing Form Types</h2>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1/"</span>
-  -H <span class="s2">"Authorization: YOUR_API_KEY"</span>
+  -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -5155,7 +5151,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
    </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"OK"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"copyright"</span><span class="p">:</span><span class="s2">"Copyright (c) 2016 ProPublica Inc. All Rights Reserved."</span><span class="p">,</span><span class="w">
-   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/svc/elections/us/v3/finances/2016/"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/campaign-finance/v1/2016/"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"cycle"</span><span class="p">:</span><span class="mi">2016</span><span class="p">,</span><span class="w">
    </span><span class="nt">"results"</span><span class="p">:[</span><span class="w">
       </span><span class="p">{</span><span class="w">
@@ -5238,7 +5234,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <h2 id="get-electronic-filings-by-type">Get Electronic Filings By Type</h2>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1/"</span>
-  -H <span class="s2">"Authorization: YOUR_API_KEY"</span>
+  -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -5248,7 +5244,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
    </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"OK"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"copyright"</span><span class="p">:</span><span class="s2">"Copyright (c) 2016 ProPublica Inc. All Rights Reserved."</span><span class="p">,</span><span class="w">
    </span><span class="nt">"date"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span><span class="w">
-   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/svc/elections/us/v3/finances/2016/"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/campaign-finance/v1/2016/"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"cycle"</span><span class="p">:</span><span class="mi">2016</span><span class="p">,</span><span class="w">
    </span><span class="nt">"offset"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span><span class="w">
    </span><span class="nt">"results"</span><span class="p">:[</span><span class="w">
@@ -5778,7 +5774,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <h2 id="get-summary-for-a-specific-electronic-filing">Get Summary for a Specific Electronic Filing</h2>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1/"</span>
-  -H <span class="s2">"Authorization: YOUR_API_KEY"</span>
+  -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -5787,7 +5783,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
    </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"OK"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"copyright"</span><span class="p">:</span><span class="s2">"Copyright (c) 2016 ProPublica Inc. All Rights Reserved."</span><span class="p">,</span><span class="w">
-   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/svc/elections/us/v3/finances/2016/"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/campaign-finance/v1/2016/"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"cycle"</span><span class="p">:</span><span class="mi">2016</span><span class="p">,</span><span class="w">
    </span><span class="nt">"results"</span><span class="p">:{</span><span class="w">
       </span><span class="nt">"form_type"</span><span class="p">:</span><span class="s2">"F3PA"</span><span class="p">,</span><span class="w">
@@ -6020,7 +6016,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <h2 id="get-recent-amendments">Get Recent Amendments</h2>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1/"</span>
-  -H <span class="s2">"Authorization: YOUR_API_KEY"</span>
+  -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -6029,7 +6025,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
    </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"OK"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"copyright"</span><span class="p">:</span><span class="s2">"Copyright (c) 2016 ProPublica Inc. All Rights Reserved."</span><span class="p">,</span><span class="w">
-   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/svc/elections/us/v3/finances/2016/"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/campaign-finance/v1/2016/"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"cycle"</span><span class="p">:</span><span class="mi">2016</span><span class="p">,</span><span class="w">
    </span><span class="nt">"offset"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span><span class="w">
    </span><span class="nt">"results"</span><span class="p">:[</span><span class="w">
@@ -6547,7 +6543,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <h2 id="get-recent-electioneering-communications">Get Recent Electioneering Communications</h2>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1/"</span>
-  -H <span class="s2">"Authorization: YOUR_API_KEY"</span>
+  -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -6556,7 +6552,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
    </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"OK"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"copyright"</span><span class="p">:</span><span class="s2">"Copyright (c) 2016 ProPublica Inc. All Rights Reserved."</span><span class="p">,</span><span class="w">
-   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/svc/elections/us/v3/finances/2016/"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/campaign-finance/v1/2016/"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"cycle"</span><span class="p">:</span><span class="mi">2016</span><span class="p">,</span><span class="w">
    </span><span class="nt">"results"</span><span class="p">:[</span><span class="w">
       </span><span class="p">{</span><span class="w">
@@ -7350,7 +7346,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <h2 id="get-electioneering-communications-by-specific-committee">Get Electioneering Communications by Specific Committee</h2>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1/"</span>
-  -H <span class="s2">"Authorization: YOUR_API_KEY"</span>
+  -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -7359,7 +7355,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
    </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"OK"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"copyright"</span><span class="p">:</span><span class="s2">"Copyright (c) 2016 ProPublica Inc. All Rights Reserved."</span><span class="p">,</span><span class="w">
-   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/svc/elections/us/v3/finances/2016/"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/campaign-finance/v1/2016/"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"cycle"</span><span class="p">:</span><span class="mi">2016</span><span class="p">,</span><span class="w">
    </span><span class="nt">"results"</span><span class="p">:[</span><span class="w">
       </span><span class="p">{</span><span class="w">
@@ -7504,7 +7500,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <h2 id="get-electioneering-communications-by-date">Get Electioneering Communications by Date</h2>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1/"</span>
-  -H <span class="s2">"Authorization: YOUR_API_KEY"</span>
+  -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -7513,7 +7509,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
    </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"OK"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"copyright"</span><span class="p">:</span><span class="s2">"Copyright (c) 2016 ProPublica Inc. All Rights Reserved."</span><span class="p">,</span><span class="w">
-   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/svc/elections/us/v3/finances/2016/"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/campaign-finance/v1/2016/"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"cycle"</span><span class="p">:</span><span class="mi">2016</span><span class="p">,</span><span class="w">
    </span><span class="nt">"results"</span><span class="p">:[</span><span class="w">
       </span><span class="p">{</span><span class="w">
@@ -7712,7 +7708,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <h2 id="get-recent-independent-expenditures">Get Recent Independent Expenditures</h2>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1/"</span>
-  -H <span class="s2">"Authorization: YOUR_API_KEY"</span>
+  -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -7728,7 +7724,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <h2 id="get-independent-expenditures-by-date">Get Independent Expenditures by Date</h2>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1/"</span>
-  -H <span class="s2">"Authorization: YOUR_API_KEY"</span>
+  -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -7767,7 +7763,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <h2 id="get-independent-expenditures-by-specific-committee">Get Independent Expenditures by Specific Committee</h2>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1/"</span>
-  -H <span class="s2">"Authorization: YOUR_API_KEY"</span>
+  -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -7798,7 +7794,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <h2 id="get-independent-expenditures-that-support-or-oppose-a-specific-candidate">Get Independent Expenditures that Support or Oppose a Specific Candidate</h2>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1/"</span>
-  -H <span class="s2">"Authorization: YOUR_API_KEY"</span>
+  -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -7807,7 +7803,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
    </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"OK"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"copyright"</span><span class="p">:</span><span class="s2">"Copyright (c) 2016 ProPublica Inc. All Rights Reserved."</span><span class="p">,</span><span class="w">
-   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/svc/elections/us/v3/finances/2016/"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/campaign-finance/v1/2016/"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"cycle"</span><span class="p">:</span><span class="mi">2016</span><span class="p">,</span><span class="w">
    </span><span class="nt">"fec_candidate"</span><span class="p">:</span><span class="s2">"/candidates/P00003392.json"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"support_total"</span><span class="p">:</span><span class="mf">854070.71</span><span class="p">,</span><span class="w">
@@ -8200,7 +8196,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <h2 id="get-independent-expenditures-that-support-or-oppose-presidential-candidates">Get Independent Expenditures that Support or Oppose Presidential Candidates</h2>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1/"</span>
-  -H <span class="s2">"Authorization: YOUR_API_KEY"</span>
+  -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -8209,7 +8205,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
    </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"OK"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"copyright"</span><span class="p">:</span><span class="s2">"Copyright (c) 2016 ProPublica Inc. All Rights Reserved."</span><span class="p">,</span><span class="w">
-   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/svc/elections/us/v3/finances/2016/"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/campaign-finance/v1/2016/"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"cycle"</span><span class="p">:</span><span class="mi">2016</span><span class="p">,</span><span class="w">
    </span><span class="nt">"results"</span><span class="p">:[</span><span class="w">
       </span><span class="p">{</span><span class="w">
@@ -8684,7 +8680,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <h2 id="get-independent-expenditure-office-totals">Get Independent Expenditure Office Totals</h2>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1/"</span>
-  -H <span class="s2">"Authorization: YOUR_API_KEY"</span>
+  -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -8693,7 +8689,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
    </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"OK"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"copyright"</span><span class="p">:</span><span class="s2">"Copyright (c) 2016 ProPublica Inc. All Rights Reserved."</span><span class="p">,</span><span class="w">
-   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/svc/elections/us/v3/finances/2016/"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/campaign-finance/v1/2016/"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"cycle"</span><span class="p">:</span><span class="mi">2016</span><span class="p">,</span><span class="w">
    </span><span class="nt">"results"</span><span class="p">:[</span><span class="w">
       </span><span class="p">{</span><span class="w">
@@ -9382,7 +9378,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <h2 id="get-independent-expenditure-race-totals-for-a-specific-committee">Get Independent Expenditure Race Totals for a Specific Committee</h2>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1/"</span>
-  -H <span class="s2">"Authorization: YOUR_API_KEY"</span>
+  -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -9391,7 +9387,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
    </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"OK"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"copyright"</span><span class="p">:</span><span class="s2">"Copyright (c) 2016 ProPublica Inc. All Rights Reserved."</span><span class="p">,</span><span class="w">
-   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/svc/elections/us/v3/finances/2016/"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/campaign-finance/v1/2016/"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"cycle"</span><span class="p">:</span><span class="mi">2016</span><span class="p">,</span><span class="w">
    </span><span class="nt">"fec_committee"</span><span class="p">:</span><span class="s2">"/committees/C00490375.json"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"total_amount"</span><span class="p">:</span><span class="mf">971008.12</span><span class="p">,</span><span class="w">
@@ -9458,7 +9454,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <h2 id="get-recent-late-contributions">Get Recent Late Contributions</h2>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1/"</span>
-  -H <span class="s2">"Authorization: YOUR_API_KEY"</span>
+  -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -9467,7 +9463,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
    </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"OK"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"copyright"</span><span class="p">:</span><span class="s2">"Copyright (c) 2016 ProPublica Inc. All Rights Reserved."</span><span class="p">,</span><span class="w">
-   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/svc/elections/us/v3/finances/2016/"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/campaign-finance/v1/2016/"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"cycle"</span><span class="p">:</span><span class="mi">2016</span><span class="p">,</span><span class="w">
    </span><span class="nt">"offset"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span><span class="w">
    </span><span class="nt">"results"</span><span class="p">:[</span><span class="w">
@@ -9659,7 +9655,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <h2 id="get-recent-late-contributions-to-a-specific-candidate">Get Recent Late Contributions to a Specific Candidate</h2>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1/"</span>
-  -H <span class="s2">"Authorization: YOUR_API_KEY"</span>
+  -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -9689,7 +9685,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <h2 id="get-recent-late-contributions-to-a-specific-committee">Get Recent Late Contributions to a Specific Committee</h2>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1/"</span>
-  -H <span class="s2">"Authorization: YOUR_API_KEY"</span>
+  -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -9698,7 +9694,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
    </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"OK"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"copyright"</span><span class="p">:</span><span class="s2">"Copyright (c) 2016 ProPublica Inc. All Rights Reserved."</span><span class="p">,</span><span class="w">
-   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/svc/elections/us/v3/finances/2016/"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/campaign-finance/v1/2016/"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"cycle"</span><span class="p">:</span><span class="mi">2016</span><span class="p">,</span><span class="w">
    </span><span class="nt">"offset"</span><span class="p">:</span><span class="kc">null</span><span class="p">,</span><span class="w">
    </span><span class="nt">"results"</span><span class="p">:[</span><span class="w">
@@ -10229,7 +10225,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <h2 id="get-recent-late-contributions-by-date">Get Recent Late Contributions by Date</h2>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1/"</span>
-  -H <span class="s2">"Authorization: YOUR_API_KEY"</span>
+  -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -10269,7 +10265,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <h2 id="get-lobbyist-bundlers-for-a-specific-committee">Get Lobbyist Bundlers for a Specific Committee</h2>
 <pre class="highlight shell"><code>curl <span class="s2">"https://api.propublica.org/campaign-finance/v1/"</span>
-  -H <span class="s2">"Authorization: YOUR_API_KEY"</span>
+  -H <span class="s2">"X-API-Key: PROPUBLICA_API_KEY"</span>
 </code></pre>
 
 <blockquote>
@@ -10278,7 +10274,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
    </span><span class="nt">"status"</span><span class="p">:</span><span class="s2">"OK"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"copyright"</span><span class="p">:</span><span class="s2">"Copyright (c) 2016 ProPublica Inc. All Rights Reserved."</span><span class="p">,</span><span class="w">
-   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/svc/elections/us/v3/finances/2016/"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"base_uri"</span><span class="p">:</span><span class="s2">"http://api.propublica.org/campaign-finance/v1/2016/"</span><span class="p">,</span><span class="w">
    </span><span class="nt">"cycle"</span><span class="p">:</span><span class="mi">2016</span><span class="p">,</span><span class="w">
    </span><span class="nt">"results"</span><span class="p">:[</span><span class="w">
       </span><span class="p">{</span><span class="w">
@@ -10645,7 +10641,7 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 
 <aside class="notice">This error section is stored in a separate file in `includes/_errors.md`. Slate allows you to optionally separate out your docs into many files&hellip;just save them to the `includes` folder and add them to the top of your `index.md`&rsquo;s frontmatter. Files are included in the order listed.</aside>
 
-<p>The Kittn API uses the following error codes:</p>
+<p>The ProPublica Campaign Finance API uses the following error codes:</p>
 
 <table><thead>
 <tr>
@@ -10655,47 +10651,39 @@ You must replace <code>YOUR_API_KEY</code> with your personal API key.
 </thead><tbody>
 <tr>
 <td>400</td>
-<td>Bad Request &ndash; Your request sucks</td>
+<td>Bad Request &ndash; Your request is improperly configured</td>
 </tr>
 <tr>
 <td>401</td>
-<td>Unauthorized &ndash; Your API key is wrong</td>
+<td>Unauthorized &ndash; Your API key is wrong or missing</td>
 </tr>
 <tr>
 <td>403</td>
-<td>Forbidden &ndash; The kitten requested is hidden for administrators only</td>
+<td>Forbidden &ndash; Your request is not allowed</td>
 </tr>
 <tr>
 <td>404</td>
-<td>Not Found &ndash; The specified kitten could not be found</td>
+<td>Not Found &ndash; Your request worked, but did not find a response</td>
 </tr>
 <tr>
 <td>405</td>
-<td>Method Not Allowed &ndash; You tried to access a kitten with an invalid method</td>
+<td>Method Not Allowed &ndash; You tried to access a response with an invalid method</td>
 </tr>
 <tr>
 <td>406</td>
-<td>Not Acceptable &ndash; You requested a format that isn&rsquo;t json</td>
-</tr>
-<tr>
-<td>410</td>
-<td>Gone &ndash; The kitten requested has been removed from our servers</td>
-</tr>
-<tr>
-<td>418</td>
-<td>I&rsquo;m a teapot</td>
+<td>Not Acceptable &ndash; You requested a format that isn&rsquo;t json or xml</td>
 </tr>
 <tr>
 <td>429</td>
-<td>Too Many Requests &ndash; You&rsquo;re requesting too many kittens! Slow down!</td>
+<td>Too Many Requests &ndash; You&rsquo;ve made too many requests.</td>
 </tr>
 <tr>
 <td>500</td>
-<td>Internal Server Error &ndash; We had a problem with our server. Try again later.</td>
+<td>Internal Server Error &ndash; We had a problem with our server. Try again later, and let us know what you requested at apihelp@propublica.org.</td>
 </tr>
 <tr>
 <td>503</td>
-<td>Service Unavailable &ndash; We&rsquo;re temporarially offline for maintanance. Please try again later.</td>
+<td>Service Unavailable &ndash; We&rsquo;re temporarily offline for maintenance or because of another issue. Please try again later.</td>
 </tr>
 </tbody></table>
 
