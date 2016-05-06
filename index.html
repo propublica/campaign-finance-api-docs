@@ -109,12 +109,12 @@ You must replace <code>PROPUBLICA_API_KEY</code> with your personal API key.
 
 <ul>
 <li><em>callback</em> JSONP callback function (in query string).</li>
-<li><em>offset</em> The first 20 results are shown by default. To page through the results, set offset to the appropriate multiple of 20.</li>
+<li><em>offset</em> The first 20 results are shown by default for most requests. To page through the results, set offset to the appropriate multiple of 20. Date-based responses return all relevant results.</li>
 </ul>
 
 <h1 id="responses">Responses</h1>
 
-<p>The API provides JSON and XML responses for every type of request, and supports JSONP callbacks. Responses that are not date-based return the first 20 results; pagination is available via an <code class="prettyprint">offset</code> query string parameter using multiples of 20.</p>
+<p>The API provides JSON and XML responses for every type of request, and supports JSONP callbacks. Responses that are not date-based or containing aggregate totals return the first 20 results; pagination is available via an <code class="prettyprint">offset</code> query string parameter using multiples of 20.</p>
 
 <h1 id="candidates">Candidates</h1>
 
@@ -7606,7 +7606,7 @@ You must replace <code>PROPUBLICA_API_KEY</code> with your personal API key.
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<p>This endpoint retrieves broadcast advertisements that identify one or more federal candidates (and have aired 30 days before a primary election and 60 days before the general election) from a specific date.</p>
+<p>This endpoint retrieves all broadcast advertisements that identify one or more federal candidates (and have aired 30 days before a primary election and 60 days before the general election) from a specific date.</p>
 
 <h3 id="http-request">HTTP Request</h3>
 
@@ -8114,7 +8114,7 @@ You must replace <code>PROPUBLICA_API_KEY</code> with your personal API key.
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<p>This endpoint retrieves the most recent independent expenditures.</p>
+<p>This endpoint retrieves the 20 most recent independent expenditures and optionally can be offset by multiples of 20.</p>
 
 <h3 id="http-request">HTTP Request</h3>
 
@@ -8163,7 +8163,7 @@ You must replace <code>PROPUBLICA_API_KEY</code> with your personal API key.
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<p>This endpoint retrieves the most recent independent expenditures on a specific date (the date of activity, not the date filed with the FEC).</p>
+<p>This endpoint retrieves all independent expenditures on a specific date (the date of activity, not the date filed with the FEC).</p>
 
 <h3 id="http-request">HTTP Request</h3>
 
@@ -8632,7 +8632,7 @@ You must replace <code>PROPUBLICA_API_KEY</code> with your personal API key.
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<p>This endpoint retrieves most recent independent expenditures by a given committee.</p>
+<p>This endpoint retrieves the 20 most recent independent expenditures by a given committee.</p>
 
 <h3 id="http-request">HTTP Request</h3>
 
@@ -9034,7 +9034,7 @@ You must replace <code>PROPUBLICA_API_KEY</code> with your personal API key.
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<p>This endpoint retrieves most recent independent expenditures in support of or opposition to a given candidate.</p>
+<p>This endpoint retrieves the 20 most recent independent expenditures in support of or opposition to a given candidate.</p>
 
 <h3 id="http-request">HTTP Request</h3>
 
@@ -9532,7 +9532,7 @@ You must replace <code>PROPUBLICA_API_KEY</code> with your personal API key.
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<p>This endpoint retrieves the most recent independent expenditures in support of or opposition to any presidential candidate.</p>
+<p>This endpoint retrieves the 20 most recent independent expenditures in support of or opposition to any presidential candidate.</p>
 
 <h3 id="http-request">HTTP Request</h3>
 
